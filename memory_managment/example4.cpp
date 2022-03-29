@@ -1,36 +1,35 @@
 #include <iostream>
 #include <stdexcept>
-#include <memory>
 
-void foo()
-{
+void foo() {
     throw std::runtime_error("Error");
 }
 
-class MyPointer
-{
+class MyPointer {
 public:
-    MyPointer(): pointer(new int(15))
-    {
-        foo();
+    int *pointer;
+
+    MyPointer() : pointer(new int(15)) {
+        try {
+            foo();
+        } catch (std::runtime_error const &p_err) {
+
+        }
     }
 
-    ~MyPointer()
-    {
+    ~MyPointer() {
         delete pointer;
     }
-    int* pointer;
 };
 
-int main()
-{
-    try
-    {
+int main() {
+
+    try {
         MyPointer pointerTest;
         std::cout << pointerTest.pointer << std::endl;
     }
-    catch(std::runtime_error const& p_err)
-    {
+    catch (std::runtime_error const &p_err) {
         std::cout << "Ups: " << p_err.what() << std::endl;
     }
+
 }

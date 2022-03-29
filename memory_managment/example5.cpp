@@ -1,61 +1,48 @@
 #include <iostream>
 #include <chrono>
+#include <memory>
 
-struct Partner {};
+struct Partner {
+};
 
-std::size_t getCurrentTime()
-{
+std::size_t getCurrentTime() {
     return std::chrono::system_clock::now().time_since_epoch().count();
 }
 
-bool process()
-{
+bool process() {
     if (getCurrentTime() % 17 == 0) throw 17;
     return true;
 }
 
-bool processSecond()
-{
-	if (getCurrentTime() % 2) throw 3.14;
-	return true;
+bool processSecond() {
+    if (getCurrentTime() % 2) throw 3.14;
+    return true;
 }
 
-void convertMe()
-{
-    Partner* pFirst = new Partner();
+void convertMe() {
+    std::unique_ptr<Partner> pFirst = std::make_unique<Partner>();
 
-    if (!process())
-    {
-        delete pFirst;
+    if (!process()) {
         return;
     }
 
-    Partner* pSecond = new Partner();
+    std::unique_ptr<Partner> pSecond = std::make_unique<Partner>();
 
-    if (!processSecond())
-    {
-        delete pFirst;
-        delete pSecond;
+    if (!processSecond()) {
         return;
     }
 
     process();
-    delete pFirst;
-    delete pSecond;
 }
 
-int main()
-{
-    try
-    {
+int main() {
+    try {
         convertMe();
     }
-    catch(int i)
-    {
+    catch (int i) {
         std::cout << "Ups: " << i << std::endl;
     }
-    catch(double d)
-    {
+    catch (double d) {
         std::cout << "Ups: " << d << std::endl;
     }
     return 0;
